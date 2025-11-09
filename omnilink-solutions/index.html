@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OmniLink Solutions — All Services</title>
+  <link rel="stylesheet" href="assets/app.css"/>
+  <meta name="description" content="All trades. All services. One intelligent network. Book reliable pros or join as a contractor."/>
+</head>
+<body>
+  <nav class="nav">
+    <div class="logo"><div class="badge">OL</div> OmniLink Solutions</div>
+    <div class="flex">
+      <a class="btn" href="contractor.html">Contractors</a>
+      <a class="btn primary" href="#lead" onclick="openChat()">Get a Quote</a>
+    </div>
+  </nav>
+
+  <section class="hero container">
+    <div class="chip kicker">All trades • All industries • One network</div>
+    <h1>Choose the service you need today!</h1>
+    <p>Tap a service to chat with the Lead Bot and place a request in under 60 seconds.</p>
+  </section>
+
+  <main class="container">
+    <div id="service-grid" class="card"></div>
+
+    <div class="card" style="margin-top:22px">
+      <div class="section-title">Quick Lead Form</div>
+      <p class="small-note">Prefer a form? We’ll push it to your dashboard instantly.</p>
+      <div class="form-card">
+        <div class="stack">
+          <div>
+            <div class="label">Service</div>
+            <select id="service-select"></select>
+          </div>
+          <div class="grid" style="grid-template-columns:repeat(2,1fr)">
+            <div>
+              <div class="label">Your name</div>
+              <input class="input" id="lead-name" placeholder="e.g., Dyllon"/>
+            </div>
+            <div>
+              <div class="label">Phone (SA)</div>
+              <input class="input" id="lead-phone" placeholder="0821234567"/>
+            </div>
+          </div>
+          <div>
+            <div class="label">Suburb / Area</div>
+            <input class="input" id="lead-area" placeholder="e.g., Durban North"/>
+          </div>
+          <div>
+            <div class="label">Notes</div>
+            <input class="input" id="lead-notes" placeholder="Optional"/>
+          </div>
+          <div class="flex" style="justify-content:flex-end">
+            <button class="btn" onclick="openChat()">Chat instead</button>
+            <button class="btn primary" id="lead-submit">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <button id="chat-launcher" class="btn primary">Chat</button>
+
+  <footer class="footer">
+    <div>© <span id="year"></span> OmniLink Solutions • Built for speed on Vercel-ready static files</div>
+  </footer>
+
+  <script src="assets/services.js"></script>
+  <script src="assets/app.js"></script>
+  <script>
+    // Populate services grid
+    renderServiceGrid(document.getElementById('service-grid'));
+    // Fill select with all services
+    const select = document.getElementById('service-select');
+    SERVICE_CATALOG.forEach(g=> g.items.forEach(s=>{
+      const o = document.createElement('option'); o.value=o.textContent=s; select.appendChild(o);
+    }));
+    // Submit handler
+    document.getElementById('lead-submit').onclick = ()=>{
+      const lead = {
+        service: select.value,
+        name: document.getElementById('lead-name').value.trim(),
+        phone: document.getElementById('lead-phone').value.trim(),
+        suburb: document.getElementById('lead-area').value.trim(),
+        notes: document.getElementById('lead-notes').value.trim(),
+        source:'form'
+      };
+      if(!lead.name || !/^0\d{9}$/.test(lead.phone.replace(/\s/g,''))){ toast('Please enter a name and valid SA phone'); return; }
+      Leads.add(lead); confettiBurst(); toast('Lead submitted'); 
+    };
+    document.getElementById('year').textContent = new Date().getFullYear();
+    document.getElementById('chat-launcher').onclick=()=> openChat();
+  </script>
+</body>
+</html>

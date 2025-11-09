@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contractor Portal — OmniLink</title>
+  <link rel="stylesheet" href="assets/app.css"/>
+</head>
+<body>
+  <nav class="nav">
+    <div class="logo"><div class="badge">OL</div> Contractors</div>
+    <div class="flex">
+      <a class="btn" href="index.html">Back to Services</a>
+      <a class="btn primary" href="contractor-login.html">Admin Login</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="card form-card">
+      <div class="section-title">Join the network</div>
+      <p class="small-note">Tell us about your business. We approve fast.</p>
+      <div class="grid" style="grid-template-columns:repeat(2,1fr)">
+        <div class="stack">
+          <label class="label">Business name</label>
+          <input class="input" id="biz-name">
+          <label class="label">Owner full name</label>
+          <input class="input" id="owner-name">
+          <label class="label">Email</label>
+          <input class="input" id="email">
+        </div>
+        <div class="stack">
+          <label class="label">Phone</label>
+          <input class="input" id="phone">
+          <label class="label">Primary service</label>
+          <input class="input" id="primary">
+          <label class="label">Areas covered</label>
+          <input class="input" id="areas" placeholder="e.g., Durban North, Umhlanga">
+        </div>
+      </div>
+      <div class="stack" style="margin-top:10px">
+        <label class="label">About your company</label>
+        <input class="input" id="about">
+      </div>
+      <div class="flex" style="justify-content:flex-end;margin-top:12px">
+        <button class="btn" onclick="window.location='contractor-login.html'">I already have an account</button>
+        <button class="btn primary" id="apply">Apply</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="assets/services.js"></script>
+  <script src="assets/app.js"></script>
+  <script>
+    document.getElementById('apply').onclick = ()=>{
+      const data = {
+        biz: document.getElementById('biz-name').value.trim(),
+        owner: document.getElementById('owner-name').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        primary: document.getElementById('primary').value.trim(),
+        areas: document.getElementById('areas').value.trim(),
+        about: document.getElementById('about').value.trim()
+      };
+      const apps = JSON.parse(localStorage.getItem('omni_apps')||'[]');
+      apps.unshift({...data, id: crypto.randomUUID(), ts: Date.now(), status:'Pending'});
+      localStorage.setItem('omni_apps', JSON.stringify(apps));
+      confettiBurst(); toast('Application submitted');
+    };
+  </script>
+</body>
+</html>
